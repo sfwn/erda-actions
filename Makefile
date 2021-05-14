@@ -51,5 +51,23 @@ oss-upload delete-nodes ess-info loop api-register api-publish publish-api-asset
 
 .ONESHELL:
 sonarqube:
-	cd actions/sonar/1.0/sonarqube/8.4.2
-	docker build . -t registry.cn-hangzhou.aliyuncs.com/dice-third-party/sonar:8.4.2 -f Dockerfile
+
+	@set -eo pipefail
+
+	@echo start make $@
+
+	version="$${VERSION}"
+	sonarDir="actions/sonar/1.0"
+	if [[ "$${version}" == "" ]]; then
+		if [[ "`ls -l "$${sonarDir}/$@" | wc -l | tr -d ' '`" != "2" ]]; then
+			echo Multi version [$$(echo `ls $${sonarDir}/$@` | sed 's/ /, /g')] detected, which version you want to make? \
+				 specify by env: VERSION=1.0
+			exit 1
+		fi
+		version=`ls $${sonarDir}/$@`
+		echo Auto select the only version: $${version}
+	fi
+
+	@echo use version: $${version}
+	cd actions/sonar/1.0/sonarqube/$${version}
+	docker build . -t registry.cn-hangzhou.aliyuncs.com/dice-third-party/sonar:$${version} -f Dockerfile
