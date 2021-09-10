@@ -86,7 +86,9 @@ func scan(cfg conf.Conf) error {
 	}
 
 	// copy result to uploadDir
-	if output, err := exec.Command("/bin/sh", "-c", "cp target/dependency-check-* "+cfg.UploadDir).CombinedOutput(); err != nil {
+	targetUploadDir := filepath.Join(cfg.UploadDir, "result")
+	copyCmd := fmt.Sprintf("mkdir -p %s; cp -a target/. %s", targetUploadDir, targetUploadDir)
+	if output, err := exec.Command("/bin/bash", "-c", copyCmd).CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to copy report for download, err: %v, output: %s", err, string(output))
 	}
 
