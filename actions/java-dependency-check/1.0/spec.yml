@@ -31,3 +31,6 @@ params:
     desc: 用于漏洞扫描的 Maven 插件版本。可以通过 https://jeremylong.github.io/DependencyCheck/dependency-check-maven/index.html 获取最新版本。
     required: false
     default: "6.3.1"
+  - name: maven_settings_xml_path
+    type: string
+    desc: 用户自定义的 Maven 配置文件路径。若未指定，则使用内置的配置文件。
