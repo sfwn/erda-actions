@@ -1,24 +1,22 @@
-FROM registry.erda.cloud/erda/terminus-centos:7
+FROM debian:10
 
-ENV JAVA_VERSION java11-openjdk
-ENV JAVA_HOME /usr/lib/jvm/java
-ENV LANG en_US.UTF-8
+RUN \
+    apt update && \
+    apt install -y --no-install-recommends apt-transport-https ca-certificates wget dirmngr gnupg software-properties-common && \
+    wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - && \
+    add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
+    apt update
 
-RUN yum update -y && \
-    yum install -y wget && \
-    yum install -y java-11-openjdk-11.0.9.11-0.el7_9.x86_64 java-11-openjdk-devel-11.0.9.11-0.el7_9.x86_64 && \
-    yum install -y java-1.8.0-openjdk-1.8.0.272.b10-1.el7_9.x86_64 java-1.8.0-openjdk-devel-1.8.0.272.b10-1.el7_9.x86_64 && \
-    yum install -y git && \
-    yum install -y unzip && \
-    yum clean all
+RUN \
+    # use apt search & apt-cache policy to find the correct package name and specific version
+    apt install -y --no-install-recommends \
+      adoptopenjdk-8-hotspot=8u292-b10-3 \
+      adoptopenjdk-11-hotspot=11.0.11+9-3 \
+      openjfx \
+      maven && \
 
-# install tools
-## greys (~/.greys/lib/)
-RUN mkdir /tmp/greys && \
-    curl -sf https://ompc.oss.aliyuncs.com/greys/release/greys-stable-bin.zip -o /tmp/greys/greys-stable-bin.zip && \
-    pushd /tmp/greys && unzip ./greys-stable-bin.zip && cd greys && sh ./install-local.sh && \
-    cp ./greys.sh /bin/greys && \
-    popd && rm -rf /tmp/greys
-## arthas
-RUN mkdir /opt/arthas && \
-    curl -sf https://arthas.aliyun.com/arthas-boot.jar -o /opt/arthas/arthas-boot.jar
+    rm -rf /var/lib/apt/lists/*
+
+# set default java to 8
+RUN update-alternatives --set java /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64/bin/java && \
+    update-alternatives --set javac /usr/lib/jvm/adoptopenjdk-8-hotspot-amd64/bin/javac
