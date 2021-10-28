@@ -7,7 +7,7 @@ ENV LANG en_US.UTF-8
 RUN yum update -y && \
     yum install -y wget && \
     yum install -y java-11-openjdk-11.0.9.11-0.el7_9.x86_64 java-11-openjdk-devel-11.0.9.11-0.el7_9.x86_64 && \
-    yum install -y java-11-openjdk-11.0.9.11-0.el7_9.x86_64 java-11-openjdk-devel-11.0.9.11-0.el7_9.x86_64 && \
+    yum install -y java-1.8.0-openjdk-1.8.0.272.b10-1.el7_9.x86_64 java-1.8.0-openjdk-devel-1.8.0.272.b10-1.el7_9.x86_64 && \
     yum install -y git && \
     yum install -y unzip && \
     yum clean all

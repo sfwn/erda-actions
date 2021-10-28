@@ -1,7 +1,5 @@
 FROM registry.erda.cloud/erda/terminus-centos:7
 
-LABEL maintainer="xgs@terminus.io"
-
 ENV JAVA_VERSION openjdk-8u272
 ENV JAVA_HOME /usr/lib/jvm/java
 ENV LANG en_US.UTF-8
